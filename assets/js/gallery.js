@@ -1,10 +1,27 @@
 // Recieve parameters from URL for search
 
+// Base URL for API call
 const BASE_URL = "https://images-api.nasa.gov/search?q=";
+
+// Temp vars
 var pageNumber = "&page=1";
-
 var tempSearchQuery = "Jupiter";
+var tempRequest = BASE_URL + tempSearchQuery + pageNumber;
 
+// Array containers
+var mediaItems = []; // Holds objects from API calls
+var cardData = []; // Holds image data from API call
+
+// Fill cardData with thumbnails and links to The images stored in JSON
+function populateCardData(data) {
+
+    // Iterate through all the objects
+    for (var index = 0; index < data.length; index++) {
+        cardData[index] = [data[index].links[0].href, data[index].href];
+    }
+}
+
+// Send API request, if successful, populate cardData
 function getMediaFromNASALibrary(request) {
 
     fetch(request).then(function (response) {
@@ -18,10 +35,10 @@ function getMediaFromNASALibrary(request) {
     }).then(function (data) {
 
         mediaItems = data.collection.items;
-        console.log(mediaItems);
+        populateCardData(mediaItems);
+        console.log(cardData);
     });
 }
 
-var tempRequest = BASE_URL + tempSearchQuery + pageNumber;
-
+// Call on load page
 getMediaFromNASALibrary(tempRequest);
