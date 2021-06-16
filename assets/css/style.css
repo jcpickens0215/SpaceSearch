@@ -1,0 +1,14 @@
+.hero.is-fullheight .hero-body, .hero.is-fullheight-with-navbar .hero-body, .hero-is-halfheight .hero-body {
+    align-items: center;
+    display: flex;
+}
+
+.hero-body {
+    flex-grow: 1;
+    flex-shrink: 0;
+    padding: 3rem 1.5rem;
+}
+
+*, ::after, ::before {
+    box-sizing: inherit;
+}
