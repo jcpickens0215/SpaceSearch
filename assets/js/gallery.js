@@ -33,10 +33,6 @@ function populateCardData(incomingData) {
 // is why a new fetch needs to be made.
 function requestLargeImage(href) {
 
-    // !! IMPORTANT
-    // Video JSONs have a different structure, but if we search for this phrase
-    // "~orig.mp4", then we can grab the video
-
     // Attempt to fetch the JSON containing links to larger image sizes
     fetch(href).then(function (response) {
 
@@ -49,9 +45,6 @@ function requestLargeImage(href) {
     }).then(function (data) {
 
         // ! Temp: log link to large image in console
-
-        // ! Videos need to search for "~orig.mp4" and return that item
-
         console.log(data[0]);
     })
 }
@@ -64,6 +57,7 @@ function requestVideo(href) {
         return response.json();
     }).then(function (data) {
 
+        // ! Temp: log link to Video in console
         console.log('FILTERED VIDEO DATA', data.filter(video => video.includes('~orig.mp4'))[0]);
 
         // Ben says this should work
