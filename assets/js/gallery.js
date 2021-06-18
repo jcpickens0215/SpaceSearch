@@ -1,7 +1,6 @@
 // Recieve parameters from URL for search
-/* function here that pulls data from the URL,
-   correctly processes it, and loads the params
-   into vars */
+var searchQuery;
+
 
 // Base URL for API call
 const BASE_URL = "https://images-api.nasa.gov/search?q=";
@@ -16,6 +15,21 @@ var tempRequest = BASE_URL + tempSearchQuery + pageNumber;
 // Array containers
 var mediaItems = []; // Holds objects from API calls
 var cardData = []; // Holds image data from API call
+
+function getQueryFromURL() {
+
+    var URLString = document.location.search;
+    searchQuery = URLString.split("=")[1];
+
+    if (searchQuery !== null) {
+
+        var myRequest = BASE_URL + searchQuery;
+        getMediaFromNASALibrary(myRequest);
+    } else {
+
+        document.location.replace('./index.html');
+    }
+}
 
 // Fill cardData with thumbnails and links to The images stored in JSON
 function populateCardData(incomingData) {
@@ -80,6 +94,7 @@ function getMediaFromNASALibrary(request) {
 
 
         mediaItems = data.collection.items;
+
         populateCardData(mediaItems);
 
         console.log(cardData);
@@ -101,4 +116,4 @@ function getMediaFromNASALibrary(request) {
 }
 
 // Call on load page
-getMediaFromNASALibrary(tempRequest);
+getQueryFromURL();
