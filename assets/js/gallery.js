@@ -1,4 +1,5 @@
 // Recieve parameters from URL for search
+var searchQuery;
 
 // Base URL for API call
 const BASE_URL = "https://images-api.nasa.gov/search?q=";
@@ -12,11 +13,27 @@ var tempRequest = BASE_URL + tempSearchQuery + pageNumber;
 var mediaItems = []; // Holds objects from API calls
 var cardData = []; // Holds image data from API call
 
+function getQueryFromURL() {
+
+    var URLString = document.location.search;
+    searchQuery = URLString.split("=")[1];
+
+    if (searchQuery !== null) {
+
+        var myRequest = BASE_URL + searchQuery;
+        getMediaFromNASALibrary(myRequest);
+    } else {
+
+        document.location.replace('./index.html');
+    }
+}
+
 // Fill cardData with thumbnails and links to The images stored in JSON
 function populateCardData(data) {
 
     // Iterate through all the objects
     for (var index = 0; index < data.length; index++) {
+
         cardData[index] = [data[index].links[0].href, data[index].href];
     }
 }
@@ -35,10 +52,11 @@ function getMediaFromNASALibrary(request) {
     }).then(function (data) {
 
         mediaItems = data.collection.items;
+
         populateCardData(mediaItems);
         console.log(cardData);
     });
 }
 
 // Call on load page
-getMediaFromNASALibrary(tempRequest);
+getQueryFromURL();
