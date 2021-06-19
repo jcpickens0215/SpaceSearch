@@ -93,6 +93,7 @@ function renderCards(keyword) {
         // Set image and card info
         thumbEl.setAttribute("src", thumbSrc[0]);
         thumbEl.setAttribute("data-index", index);
+        listItemEl.setAttribute("data-index", index);
 
         // Append the elements
         listItemEl.append(thumbEl);
@@ -127,8 +128,8 @@ function requestLargeImage(href) {
         return response.json();
     }).then(function (data) {
 
-        // ! Temp: log link to large image in console
-        console.log(data[0]);
+        // Open in new tab
+        window.open(data[0], "_blank");
     })
 }
 
@@ -140,11 +141,8 @@ function requestVideo(href) {
         return response.json();
     }).then(function (data) {
 
-        // ! Temp: log link to Video in console
-        console.log('FILTERED VIDEO DATA', data.filter(video => video.includes('~orig.mp4'))[0]);
-
-        // Ben says this should work
-        // var theOriginalVideo = data.filter(video => video.includes('~orig.mp4'))[0];
+        // Open in new tab
+        window.open(data.filter(video => video.includes('~orig.mp4'))[0], "_blank");
     })
 }
 
@@ -174,19 +172,24 @@ function getMediaFromNASALibrary(request) {
 
         // Show the images!
         renderCards(keyword);
-
-        // // Check if the item is an image or a video
-        // if (tempImage[2] === "video") { // Is a video
-            
-        //     requestVideo(tempImage[1]);
-            
-        // } else { // Is an image
-
-        //     requestLargeImage(tempImage[1]);
-        // }
-        
     });
 }
 
 // Call on load page
 getQueryFromURL();
+
+cardContainerEl.addEventListener("click", function (event) {
+
+    var element = event.target;
+
+    if ((element.tagName === "LI") || (element.tagName === "IMG")) {
+
+        var elementCard = cardData[element.getAttribute("data-index")];
+
+        if (elementCard[2] === "video") { // Is a video
+            requestVideo(elementCard[1]);
+        } else { // Is an image
+            requestLargeImage(elementCard[1]);
+        }
+    }
+});
