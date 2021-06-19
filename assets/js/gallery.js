@@ -1,5 +1,7 @@
 // Elements
 var cardContainerEl = document.querySelector("#resultsField");
+var errorFieldEl = document.querySelector("#errorField");
+var attemptFieldEl = document.querySelector("#attemptField");
 
 // Holds query from searchbar
 var searchQuery;
@@ -22,8 +24,10 @@ function getQueryFromURL() {
         var URLString = document.location.search;
         searchQuery = URLString.split("=")[1];
 
+        console.log(searchQuery);
+
         // If the search wasn't ''
-        if (searchQuery !== null) {
+        if (searchQuery) { // I have no clue why testing if it isn't null doesn't work
 
             // Construct the API request and attempt it
             var myRequest = BASE_URL + searchQuery;
@@ -59,7 +63,19 @@ function populateCardData(incomingData) {
 }
 
 // This draws the image results to the screen
-function renderCards() {
+function renderCards(keyword) {
+
+    // Create the header
+    var searchHeader = document.createElement("H3");
+    
+    // Style the header
+    searchHeader.classList.add("title", "is-3");
+
+    // Set the header's content
+    searchHeader.textContent = "Showing results for " + keyword + ":";
+
+    // Append the header
+    cardContainerEl.insertAdjacentElement("beforeBegin", searchHeader);
 
     // For each in cardData[]
     for (var index = 0; index < cardData.length; index++) {
@@ -83,6 +99,16 @@ function renderCards() {
         cardContainerEl.append(listItemEl);
     }
 
+}
+
+// This function unhides the error field in gallery.html, and prints an error
+function showError(attempt) {
+
+    // Show the error field
+    errorFieldEl.setAttribute("style", "display:block;");
+    
+    // Print the failed search to the screen
+    attemptFieldEl.textContent = attempt;
 }
 
 // For a specified card in cardData[], fetch the large version from the
@@ -127,19 +153,27 @@ function getMediaFromNASALibrary(request) {
 
     fetch(request).then(function (response) {
 
-        if (response.status > 400) {
-            // Maybe let user know that there was an error?
-            return;
-        }
-
         return response.json();
     }).then(function (data) {
 
+        // Grab the keyword(s)
+        var keyword = request.split("=")[1];
 
+        if (data.collection.items.length < 1) {
+            
+            // Throw an error, and don't try anything else
+            showError(keyword);
+            return;
+        }
+
+        // Pre filter returned data (Only grab the items)
         mediaItems = data.collection.items;
 
+        // Further filtering of data (Only keep media data)
         populateCardData(mediaItems);
-        renderCards();
+
+        // Show the images!
+        renderCards(keyword);
 
         // // Check if the item is an image or a video
         // if (tempImage[2] === "video") { // Is a video
