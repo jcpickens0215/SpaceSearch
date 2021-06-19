@@ -1,21 +1,14 @@
-// Recieve parameters from URL for search
+// Holds query from searchbar
 var searchQuery;
-
 
 // Base URL for API call
 const BASE_URL = "https://images-api.nasa.gov/search?q=";
-
-// ! Temp vars, hardcoded variables used for testing
-var pageNumber = "&page=1"; // If we decide to do pagination...
-var tempSearchQuery = "Jupiter"; // Temp search keyword
-
-// ! Fully constructed temp search URL
-var tempRequest = BASE_URL + tempSearchQuery + pageNumber;
 
 // Array containers
 var mediaItems = []; // Holds objects from API calls
 var cardData = []; // Holds image data from API call
 
+// Recieve parameters from URL for search
 function getQueryFromURL() {
 
     var URLString = document.location.search;
@@ -36,9 +29,15 @@ function populateCardData(incomingData) {
 
     // Iterate through all the objects
     for (var index = 0; index < incomingData.length; index++) {
-        cardData[index] = [ incomingData[index].links[0].href,        // link to thumbnail
-                            incomingData[index].href,                 // link to JSON (larger files)
-                            incomingData[index].data[0].media_type ]; // What is it?
+
+        // Ignore all "audio" type results
+        if (incomingData[index].data[0].media_type !== "audio") {
+
+            // Add it to cardData, dynamically resizing it
+            cardData.push( [ incomingData[index].links[0].href,         // link to thumbnail
+                             incomingData[index].href,                  // link to JSON (larger files)
+                             incomingData[index].data[0].media_type ]); // What is it?
+        }
     }
 }
 
