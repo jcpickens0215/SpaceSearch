@@ -27,7 +27,7 @@ function getQueryFromURL() {
         console.log(searchQuery);
 
         // If the search wasn't ''
-        if (searchQuery) { // I have no clue why testing if it isn't null doesn't work
+        if (searchQuery !== '') { // Test for empty string
 
             // Construct the API request and attempt it
             var myRequest = BASE_URL + searchQuery;
