@@ -1,5 +1,9 @@
+// Elements
+var cardContainerEl = document.querySelector("#resultsField");
+
 // Holds query from searchbar
 var searchQuery;
+var defaultQuery = "earth";
 
 // Base URL for API call
 const BASE_URL = "https://images-api.nasa.gov/search?q=";
@@ -11,16 +15,29 @@ var cardData = []; // Holds image data from API call
 // Recieve parameters from URL for search
 function getQueryFromURL() {
 
-    var URLString = document.location.search;
-    searchQuery = URLString.split("=")[1];
+    // Check to see if there are parameters
+    if (window.location.href.includes('?')) { // If so,
 
-    if (searchQuery !== null) {
+        // Get the parameters
+        var URLString = document.location.search;
+        searchQuery = URLString.split("=")[1];
 
-        var myRequest = BASE_URL + searchQuery;
+        // If the search wasn't ''
+        if (searchQuery !== null) {
+
+            // Construct the API request and attempt it
+            var myRequest = BASE_URL + searchQuery;
+            getMediaFromNASALibrary(myRequest);  
+        } else { // If blank ('') parameter
+
+            // Go back home
+            document.location.replace("index.html");
+        }
+    } else { // If there are no parameters
+
+        // Show results for Earth!
+        var myRequest = BASE_URL + defaultQuery;
         getMediaFromNASALibrary(myRequest);
-    } else {
-
-        document.location.replace('./index.html');
     }
 }
 
@@ -39,6 +56,33 @@ function populateCardData(incomingData) {
                              incomingData[index].data[0].media_type ]); // What is it?
         }
     }
+}
+
+// This draws the image results to the screen
+function renderCards() {
+
+    // For each in cardData[]
+    for (var index = 0; index < cardData.length; index++) {
+
+        // Store the sources in this index
+        var thumbSrc = cardData[index];
+
+        // Create the elements
+        var listItemEl = document.createElement("LI");
+        var thumbEl = document.createElement("IMG");
+
+        // Pimp my card!
+        listItemEl.classList.add("column", "is-12-mobile", "is-4-tablet", "is-one-fifth-desktop", "is-2-widescreen", "box", "m-2");
+
+        // Set image and card info
+        thumbEl.setAttribute("src", thumbSrc[0]);
+        thumbEl.setAttribute("data-index", index);
+
+        // Append the elements
+        listItemEl.append(thumbEl);
+        cardContainerEl.append(listItemEl);
+    }
+
 }
 
 // For a specified card in cardData[], fetch the large version from the
@@ -95,21 +139,17 @@ function getMediaFromNASALibrary(request) {
         mediaItems = data.collection.items;
 
         populateCardData(mediaItems);
+        renderCards();
 
-        console.log(cardData);
-
-        // ! Testing the requestLargeImage function
-        var tempImage = cardData[45];
-
-        // Check if the item is an image or a video
-        if (tempImage[2] === "video") { // Is a video
+        // // Check if the item is an image or a video
+        // if (tempImage[2] === "video") { // Is a video
             
-            requestVideo(tempImage[1]);
+        //     requestVideo(tempImage[1]);
             
-        } else { // Is an image
+        // } else { // Is an image
 
-            requestLargeImage(tempImage[1]);
-        }
+        //     requestLargeImage(tempImage[1]);
+        // }
         
     });
 }

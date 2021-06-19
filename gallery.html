@@ -5,11 +5,39 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Bulma here -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
         <link rel="stylesheet" href="./assets/css/style.css">
     </head>
+
     <body>
-        
-        <script src="./assets/js/gallery.js" ></script>
+
+      <header>
+          <nav class="navbar" role="navigation" aria-label="main navigation">
+              <div class="navbar-brand m-3 ml-5">
+                <h1 class="title is-1 mb-2">SpaceSearch</h1>
+            
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="true">
+                  <span aria-hidden="true"></span>
+                  <span aria-hidden="true"></span>
+                  <span aria-hidden="true"></span>
+                </a>
+              </div>
+            </nav>
+      </header>
+
+      <main>
+        <div class="container is-fluid">
+          <ul class="columns is-multiline" id="resultsField">
+            <!-- Results will be generated -->
+          </ul>
+        </div>
+      </main>
+
+      <footer>
+
+      </footer>
+
+      <script src="./assets/js/gallery.js" ></script>
+
     </body>
 </html>
