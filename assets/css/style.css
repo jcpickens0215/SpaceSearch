@@ -1,3 +1,7 @@
+html {
+    height: 95.2%;
+}
+
 body {
     height: 100%;
     width: 100%;
@@ -13,6 +17,14 @@ body {
     flex-grow: 1;
     flex-shrink: 0;
     padding: 3rem 1.5rem;
+    background-image: url("https://apod.nasa.gov/apod/image/2106/CrescentHOOcombinedFinalimage.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#main-panel {
+    top: 40%;
 }
 
 *, ::after, ::before {
